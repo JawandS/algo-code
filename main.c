@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <math.h>
 
 int main() {
     // vector point
@@ -64,9 +65,17 @@ int main() {
     for (int y = 0; y < Y_LEN; y++) {
         for (int x = 0; x < X_LEN; x++) {
             // set ray origin and direction
-            
+            double length = sqrt(x * x + y * y + 1);
+            RAY_T curr_ray = {
+                .origin = eye_pos,
+                .dir = {
+                    .x = x / length,
+                    .y = y / length,
+                    .z = 1 / length
+                }
+            };
             // write pixel 
-            printf("%d %d %d ", 255, 0, 0);
+            printf("%d %d %d ", 0, 0, 0);
         }
     }
     printf("\n");
