@@ -40,18 +40,18 @@ int intersects_sphere(RAY_T ray, SPHERE_T sphere, double *t, VP_T *intersection_
                sphere.radius * sphere.radius;
     double discriminant = b * b - 4 * a * c;
     if (discriminant <= 0) { // sphere invalid position
-        printf("disc %lf\n", discriminant);
+        // printf("disc %lf\n", discriminant);
         return 0; // return false 
     }
     // quadratic formula 
     double pos_t = (-b + sqrt(b*b - 4*a*c)) / (2*a);
     double neg_t = (-b - sqrt(b*b - 4*a*c)) / (2*a);
     if (pos_t <= 0 || neg_t <= 0) { // invalid sphere pos
-        printf("tt %lf %lf", pos_t, neg_t);
+        // printf("tt %lf %lf", pos_t, neg_t);
         return 0; 
     }
     // select smaller 
-    printf("final disc %lf %lf %lf %lf\n", discriminant, ray.dir.x, ray.dir.y, ray.dir.z);
+    // printf("final disc %lf %lf %lf %lf\n", discriminant, ray.dir.x, ray.dir.y, ray.dir.z);
     *t = neg_t;
     if (pos_t < neg_t)
         *t = pos_t;
@@ -65,7 +65,7 @@ int main() {
         .center = {
             .x = 0,
             .y = 0,
-            .z = 10
+            .z = 20
         },
         .radius = 2.0
     }; 
@@ -100,16 +100,16 @@ int main() {
     for (int y = 0; y < Y_LEN; y++) {
         for (int x = 0; x < X_LEN; x++) {
             // set ray origin and direction
-            double length = sqrt((-0.5 + (x / 1000)) * (-0.5 + (x / 1000)) + (-(-0.5 + (y / 1000))) * (-(-0.5 + (y / 1000))) + 1);
+            double length = sqrt((-0.5 + (x / 1000.0)) * (-0.5 + (x / 1000.0)) + (-(-0.5 + (y / 1000.0))) * (-(-0.5 + (y / 1000.0))) + 1);
             RAY_T curr_ray = {
                 .origin = eye_pos,
                 .dir = {
-                    .x = (-0.5 + (x / 1000)) / length,
-                    .y = -(-0.5 + (y / 1000)) / length,
+                    .x = (-0.5 + (x / 1000.0)) / length,
+                    .y = -(-0.5 + (y / 1000.0)) / length,
                     .z = 1 / length
                 }
             };
-            printf("xyz %d %d %lf", x, y, length);
+            // printf("xyz %d %d %lf", x, y, length);
             // write pixel 
             double t;
             VP_T intersection_point;
