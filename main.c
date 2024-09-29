@@ -26,7 +26,7 @@
     } RGB_T;
 
 // declare intersects function
-// int intersects_sphere(RAY_T ray, SPHERE_T sphere, double *t, VP_T *intersection_point, VP_T *normal);
+int intersects_sphere(RAY_T ray, SPHERE_T sphere, double *t, VP_T *intersection_point, VP_T *normal);
 
 // implement intersection function
 int intersects_sphere(RAY_T ray, SPHERE_T sphere, double *t, VP_T *intersection_point, VP_T *normal) {
@@ -40,14 +40,12 @@ int intersects_sphere(RAY_T ray, SPHERE_T sphere, double *t, VP_T *intersection_
                sphere.radius * sphere.radius;
     double discriminant = b * b - 4 * a * c;
     if (discriminant <= 0) { // sphere invalid position
-        // printf("disc %lf\n", discriminant);
         return 0; // return false 
     }
     // quadratic formula 
     double pos_t = (-b + sqrt(b*b - 4*a*c)) / (2*a);
     double neg_t = (-b - sqrt(b*b - 4*a*c)) / (2*a);
     if (pos_t <= 0 || neg_t <= 0) { // invalid sphere pos
-        // printf("tt %lf %lf", pos_t, neg_t);
         return 0; 
     }
     // select smaller 
@@ -109,7 +107,6 @@ int main() {
                     .z = 1 / length
                 }
             };
-            // printf("xyz %d %d %lf", x, y, length);
             // write pixel 
             double t;
             VP_T intersection_point;
@@ -118,7 +115,6 @@ int main() {
                 printf("%d %d %d ", 255, 0, 0);
             else 
                 printf("%d %d %d ", 0, 0, 0);
-            // return 0;
         }
     }
     printf("\n");
