@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include <math.h>
 
-int main() {
-    // vector point
+// typedef
+// vector point
     typedef struct {
         double x;
         double y;
@@ -25,6 +25,41 @@ int main() {
         double b;
     } RGB_T;
 
+// declare intersects function
+// int intersects_sphere(RAY_T ray, SPHERE_T sphere, double *t, VP_T *intersection_point, VP_T *normal);
+
+// implement intersection function
+int intersects_sphere(RAY_T ray, SPHERE_T sphere, double *t, VP_T *intersection_point, VP_T *normal) {
+    double a = 1.0;
+    double b = 2 * (ray.dir.x * -sphere.center.x +
+                    ray.dir.y * -sphere.center.y +
+                    ray.dir.z * -sphere.center.z);
+    double c = sphere.center.x * sphere.center.x + 
+               sphere.center.y * sphere.center.y +
+               sphere.center.z * sphere.center.z -
+               sphere.radius * sphere.radius;
+    double discriminant = b * b - 4 * a * c;
+    if (discriminant <= 0) { // sphere invalid position
+        printf("disc %lf\n", discriminant);
+        return 0; // return false 
+    }
+    // quadratic formula 
+    double pos_t = (-b + sqrt(b*b - 4*a*c)) / (2*a);
+    double neg_t = (-b - sqrt(b*b - 4*a*c)) / (2*a);
+    if (pos_t <= 0 || neg_t <= 0) { // invalid sphere pos
+        printf("tt %lf %lf", pos_t, neg_t);
+        return 0; 
+    }
+    // select smaller 
+    printf("final disc %lf %lf %lf %lf\n", discriminant, ray.dir.x, ray.dir.y, ray.dir.z);
+    *t = neg_t;
+    if (pos_t < neg_t)
+        *t = pos_t;
+    return 1;
+}
+
+// main method
+int main() {
     // set sphere
     SPHERE_T sphere = {
         .center = {
@@ -65,17 +100,25 @@ int main() {
     for (int y = 0; y < Y_LEN; y++) {
         for (int x = 0; x < X_LEN; x++) {
             // set ray origin and direction
-            double length = sqrt(x * x + y * y + 1);
+            double length = sqrt((-0.5 + (x / 1000)) * (-0.5 + (x / 1000)) + (-(-0.5 + (y / 1000))) * (-(-0.5 + (y / 1000))) + 1);
             RAY_T curr_ray = {
                 .origin = eye_pos,
                 .dir = {
-                    .x = x / length,
-                    .y = y / length,
+                    .x = (-0.5 + (x / 1000)) / length,
+                    .y = -(-0.5 + (y / 1000)) / length,
                     .z = 1 / length
                 }
             };
+            printf("xyz %d %d %lf", x, y, length);
             // write pixel 
-            printf("%d %d %d ", 0, 0, 0);
+            double t;
+            VP_T intersection_point;
+            VP_T normal;
+            if (intersects_sphere(curr_ray, sphere, &t, &intersection_point, &normal))
+                printf("%d %d %d ", 255, 0, 0);
+            else 
+                printf("%d %d %d ", 0, 0, 0);
+            // return 0;
         }
     }
     printf("\n");
