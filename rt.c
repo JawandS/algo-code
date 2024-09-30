@@ -30,14 +30,15 @@ int intersects_sphere(RAY_T ray, SPHERE_T sphere, double *t, VP_T *intersection_
         *t = pos_t;
     
     // intersection point
-    intersection_point->x = ray.origin.x + ray.dir.x * *t;
-    intersection_point->y = ray.origin.y + ray.dir.y * *t;
-    intersection_point->z = ray.origin.z + ray.dir.z * *t;
+    intersection_point->x = ray.dir.x * *t;
+    intersection_point->y = ray.dir.y * *t;
+    intersection_point->z = ray.dir.z * *t;
 
     // normal point
     normal->x = intersection_point->x - sphere.center.x;
     normal->y = intersection_point->y - sphere.center.y;
     normal->z = intersection_point->z - sphere.center.z;
+    normalize(normal);
 
     return 1;
 }
@@ -60,10 +61,7 @@ RGB_T illuminate(RGB_T obj_color, VP_T intersection_point, VP_T normal, VP_T lig
         .y = light_loc.y - intersection_point.y,
         .z = light_loc.z - intersection_point.z
     };
-    double light_vector_len = sqrt(light_vector.x * light_vector.x + light_vector.y * light_vector.y + light_vector.z * light_vector.z);
-    light_vector.x /= light_vector_len;
-    light_vector.y /= light_vector_len;
-    light_vector.z /= light_vector_len;
+    normalize(&light_vector);
     double dp = dot(light_vector, normal);
     if (dp > 0) {
         color.r += dp * obj_color.r;
@@ -81,15 +79,10 @@ RGB_T illuminate(RGB_T obj_color, VP_T intersection_point, VP_T normal, VP_T lig
         r_vector.x = light_vector.x - normal.x * 2 * dp;
         r_vector.y = light_vector.y - normal.y * 2 * dp;
         r_vector.z = light_vector.z - normal.z * 2 * dp;
-        double r_vector_len = sqrt(r_vector.x * r_vector.x + r_vector.y * r_vector.y + r_vector.z * r_vector.z);
-        r_vector.x /= r_vector_len;
-        r_vector.y /= r_vector_len;
-        r_vector.z /= r_vector_len;
+        normalize(&r_vector);
         double dp2 = dot(r_vector, ray.dir);
         if (dp2 > 0) {
             color.r += pow(dp2, 200);
-            // color.g = 1;
-            // color.b = 1;
         }
     }
 

@@ -2,7 +2,9 @@
 # include <math.h>
 
 double length(VP_T a) {
-    return sqrt(a.x * a.x + a.y * a.y + a.z * a.z);
+    return sqrt(a.x * a.x + 
+                a.y * a.y + 
+                a.z * a.z);
 }
 
 double normalize(VP_T *a) {
@@ -15,6 +17,6 @@ double normalize(VP_T *a) {
 
 double dot(VP_T a, VP_T b) {
     return a.x * b.x + 
-           a.x * b.y + 
+           a.y * b.y + 
            a.z * b.z;
 }
