@@ -28,6 +28,17 @@ int intersects_sphere(RAY_T ray, SPHERE_T sphere, double *t, VP_T *intersection_
     *t = neg_t;
     if (pos_t < neg_t)
         *t = pos_t;
+    
+    // intersection point
+    intersection_point->x = ray.origin.x + ray.dir.x * *t;
+    intersection_point->y = ray.origin.y + ray.dir.x * *t;
+    intersection_point->z = ray.origin.z + ray.dir.z * *t;
+
+    // normal point
+    normal->x = intersection_point->x - sphere.center.x;
+    normal->y = intersection_point->y - sphere.center.y;
+    normal->z = intersection_point->z - sphere.center.z;
+
     return 1;
 }
 
@@ -83,7 +94,7 @@ int main() {
         .center = {
             .x = 0,
             .y = 0,
-            .z = 20
+            .z = 10
         },
         .radius = 2.0
     }; 
@@ -95,9 +106,9 @@ int main() {
     };
     // set light location
     VP_T light_loc = {
-        .x = 5.0,
+        .x = 0.0,
         .y = 10.0, 
-        .z = 0.0 
+        .z = 5.0 
     };
     // set eye position 
     VP_T eye_pos = {

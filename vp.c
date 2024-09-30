@@ -14,5 +14,7 @@ double normalize(VP_T *a) {
 }
 
 double dot(VP_T a, VP_T b) {
-    return a.x * b.x + b.x * b.y + a.z * b.z;
+    return a.x * b.x + 
+           a.x * b.y + 
+           a.z * b.z;
 }
