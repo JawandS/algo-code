@@ -31,7 +31,7 @@ int intersects_sphere(RAY_T ray, SPHERE_T sphere, double *t, VP_T *intersection_
     
     // intersection point
     intersection_point->x = ray.origin.x + ray.dir.x * *t;
-    intersection_point->y = ray.origin.y + ray.dir.x * *t;
+    intersection_point->y = ray.origin.y + ray.dir.y * *t;
     intersection_point->z = ray.origin.z + ray.dir.z * *t;
 
     // normal point
@@ -67,19 +67,31 @@ RGB_T illuminate(RGB_T obj_color, VP_T intersection_point, VP_T normal, VP_T lig
     double dp = dot(light_vector, normal);
     if (dp > 0) {
         color.r += dp * obj_color.r;
-    } else {
-        return color;
-    }
 
-    /*
-    Only if the dot product is positive, the light is in front of the object.
-    R = L - N * 2 * dp
-    noramlize R
-    dp2 = dot(R, ray.dir) - ray is the original ray from the eye 
-    if (dp2 > 0)
-        color.r += pow(dp2, 200)
-    */
-    // specular light
+        /*
+        Only if the dot product is positive, the light is in front of the object.
+        R = L - N * 2 * dp
+        noramlize R
+        dp2 = dot(R, ray.dir) - ray is the original ray from the eye 
+        if (dp2 > 0)
+            color.r += pow(dp2, 200)
+        */
+        // specular light
+        VP_T r_vector;
+        r_vector.x = light_vector.x - normal.x * 2 * dp;
+        r_vector.y = light_vector.y - normal.y * 2 * dp;
+        r_vector.z = light_vector.z - normal.z * 2 * dp;
+        double r_vector_len = sqrt(r_vector.x * r_vector.x + r_vector.y * r_vector.y + r_vector.z * r_vector.z);
+        r_vector.x /= r_vector_len;
+        r_vector.y /= r_vector_len;
+        r_vector.z /= r_vector_len;
+        double dp2 = dot(r_vector, ray.dir);
+        if (dp2 > 0) {
+            color.r += pow(dp2, 200);
+            // color.g = 1;
+            // color.b = 1;
+        }
+    }
 
     if (color.r > 1.0)
         color.r = 1.0;
@@ -106,9 +118,9 @@ int main() {
     };
     // set light location
     VP_T light_loc = {
-        .x = 0.0,
+        .x = 15.0,
         .y = 10.0, 
-        .z = 5.0 
+        .z = 0.0 
     };
     // set eye position 
     VP_T eye_pos = {
@@ -145,9 +157,9 @@ int main() {
             if (intersects_sphere(curr_ray, sphere, &t, &intersection_point, &normal)) {
                 RGB_T point_color = illuminate(sphere_color, intersection_point, normal, light_loc, curr_ray);
 
-                printf("%d %d %d ", (int) (255 * point_color.r), 0, 0);
+                printf("%d %d %d ", (int) (255 * point_color.r), (int) (255 * point_color.g), (int) (255 * point_color.b));
             } else {
-                printf("%d %d %d ", 0, 0, 0);
+                printf("%c %c %c ", 0, 0, 0);
             }
         }
     }
