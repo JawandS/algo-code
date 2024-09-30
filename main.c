@@ -43,13 +43,13 @@ int intersects_sphere(RAY_T ray, SPHERE_T sphere, double *t, VP_T *intersection_
         return 0; // return false 
     }
     // quadratic formula 
-    double pos_t = (-b + sqrt(b*b - 4*a*c)) / (2*a);
-    double neg_t = (-b - sqrt(b*b - 4*a*c)) / (2*a);
+    double sqrt_discriminant = sqrt(discriminant);
+    double pos_t = (-b + sqrt_discriminant) / (2*a);
+    double neg_t = (-b - sqrt_discriminant) / (2*a);
     if (pos_t <= 0 || neg_t <= 0) { // invalid sphere pos
         return 0; 
     }
     // select smaller 
-    // printf("final disc %lf %lf %lf %lf\n", discriminant, ray.dir.x, ray.dir.y, ray.dir.z);
     *t = neg_t;
     if (pos_t < neg_t)
         *t = pos_t;
