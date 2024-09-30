@@ -1,29 +1,6 @@
 #include <stdio.h>
 #include <math.h>
-
-// typedef
-// vector point
-    typedef struct {
-        double x;
-        double y;
-        double z;
-    } VP_T;
-    // ray
-    typedef struct {
-        VP_T origin;
-        VP_T dir;
-    } RAY_T;
-    // sphere
-    typedef struct {
-        VP_T center;
-        double radius;
-    } SPHERE_T; 
-    // sphere color
-    typedef struct {
-        double r;
-        double g;
-        double b;
-    } RGB_T;
+#include "vp.h"
 
 // declare intersects function
 int intersects_sphere(RAY_T ray, SPHERE_T sphere, double *t, VP_T *intersection_point, VP_T *normal);
