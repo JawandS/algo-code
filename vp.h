@@ -8,21 +8,10 @@ typedef struct {
     double y;
     double z;
 } VP_T;
-// ray
-typedef struct {
-    VP_T origin;
-    VP_T dir;
-} RAY_T;
-// sphere
-typedef struct {
-    VP_T center;
-    double radius;
-} SPHERE_T; 
-// sphere color
-typedef struct {
-    double r;
-    double g;
-    double b;
-} RGB_T;
+
+// define functions
+double len(VP_T a);
+double normalize(VP_T *a);
+double dot(VP_T a, VP_T b);
 
 #endif // VP_H
