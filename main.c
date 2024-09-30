@@ -89,7 +89,7 @@ int main() {
             VP_T intersection_point;
             VP_T normal;
             if (intersects_sphere(curr_ray, sphere, &t, &intersection_point, &normal))
-                printf("%d %d %d ", 255, 0, 0);
+                printf("%d %d %d ", (int) (255 * sphere_color.r), 0, 0);
             else 
                 printf("%d %d %d ", 0, 0, 0);
         }
