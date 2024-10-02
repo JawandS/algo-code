@@ -1,2 +1,2 @@
-gcc rt.c vp.c -lm -o rt
+gcc rt.c vec.c -lm -o rt
 ./rt > img.ppm

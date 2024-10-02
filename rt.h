@@ -1,7 +1,7 @@
 
 #ifndef RT_H
 #define RT_H
-#include "vp.h"
+#include "vec.h"
 
 // ray
 typedef struct {

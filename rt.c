@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <math.h>
-#include "vp.h"
+#include "vec.h"
 #include "rt.h"
 
 
