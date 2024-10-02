@@ -135,7 +135,7 @@ int main() {
     int X_LEN = 1000;
 
     // initialize image file header
-    printf("P3\n");
+    printf("P6\n");
     printf("1000 1000\n");
     printf("255\n");
 
@@ -158,11 +158,12 @@ int main() {
             VP_T normal;
             if (intersects_sphere(curr_ray, sphere, &t, &intersection_point, &normal)) {
                 RGB_T point_color = illuminate(sphere_color, intersection_point, normal, light_loc, curr_ray);
-
-                printf("%d %d %d ", (int) (255 * point_color.r), (int) (255 * point_color.g), (int) (255 * point_color.b));
+                printf("%c%c%c", (unsigned char) (255 * point_color.r), (unsigned char) (255 * point_color.g), (unsigned char) (255 * point_color.b));
             } else {
-                printf("%c %c %c ", 0, 0, 0);
+                printf("%c%c%c", 0, 0, 0);
             }
+            // RGB_T point_color = trace(curr_ray, sphere, &t, &intersection_point, &normal);
+            // printf("%c%c%c", (unsigned char) (255 * point_color.r), (unsigned char) (255 * point_color.g), (unsigned char) (255 * point_color.b));
         }
     }
     printf("\n");
