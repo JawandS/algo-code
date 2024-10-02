@@ -48,6 +48,8 @@ RGB_T illuminate(RGB_T obj_color, VP_T intersection_point, VP_T normal, VP_T lig
     RGB_T color;
     // ambient light
     color.r = 0.1 * obj_color.r;
+    color.g = 0.0;
+    color.b = 0.0;
 
     /** diffuse - dot product gives us cos(theta)
      get light vector: light minus intersection 
@@ -62,6 +64,7 @@ RGB_T illuminate(RGB_T obj_color, VP_T intersection_point, VP_T normal, VP_T lig
         .z = light_loc.z - intersection_point.z
     };
     normalize(&light_vector);
+    // normalize(&normal);
     double dp = dot(light_vector, normal);
     if (dp > 0) {
         color.r += dp * obj_color.r;
@@ -83,11 +86,17 @@ RGB_T illuminate(RGB_T obj_color, VP_T intersection_point, VP_T normal, VP_T lig
         double dp2 = dot(r_vector, ray.dir);
         if (dp2 > 0) {
             color.r += pow(dp2, 200);
+            color.g += pow(dp2, 200);
+            color.b += pow(dp2, 200);
         }
     }
 
     if (color.r > 1.0)
         color.r = 1.0;
+    if (color.g > 1.0)
+        color.g = 1.0;
+    if (color.b > 1.0)
+        color.b = 1.0;
     return color;
 }
 
