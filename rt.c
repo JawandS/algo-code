@@ -120,7 +120,7 @@ int main() {
     };
     // set light location
     VP_T light_loc = {
-        .x = 15.0,
+        .x = 5.0,
         .y = 10.0, 
         .z = 0.0 
     };
