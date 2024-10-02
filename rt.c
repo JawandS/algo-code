@@ -100,6 +100,13 @@ RGB_T illuminate(RGB_T obj_color, VP_T intersection_point, VP_T normal, VP_T lig
     return color;
 }
 
+RGB_T trace(RAY_T ray, SPHERE_T sphere, double *t, VP_T *intersects_point, VP_T *normal, RGB_T sphere_color, VP_T light_loc) {
+    if (intersects_sphere(ray, sphere, t, intersects_point, normal)) {
+        return illuminate(sphere_color, *intersects_point, *normal, light_loc, ray);
+    } else {
+        return (RGB_T) {0.0, 0.0, 0.0};
+    }
+}
 
 // main method
 int main() {
@@ -156,14 +163,14 @@ int main() {
             double t;
             VP_T intersection_point;
             VP_T normal;
-            if (intersects_sphere(curr_ray, sphere, &t, &intersection_point, &normal)) {
-                RGB_T point_color = illuminate(sphere_color, intersection_point, normal, light_loc, curr_ray);
-                printf("%c%c%c", (unsigned char) (255 * point_color.r), (unsigned char) (255 * point_color.g), (unsigned char) (255 * point_color.b));
-            } else {
-                printf("%c%c%c", 0, 0, 0);
-            }
-            // RGB_T point_color = trace(curr_ray, sphere, &t, &intersection_point, &normal);
-            // printf("%c%c%c", (unsigned char) (255 * point_color.r), (unsigned char) (255 * point_color.g), (unsigned char) (255 * point_color.b));
+            // if (intersects_sphere(curr_ray, sphere, &t, &intersection_point, &normal)) {
+                // RGB_T point_color = illuminate(sphere_color, intersection_point, normal, light_loc);
+                // printf("%c%c%c", (unsigned char) (255 * point_color.r), (unsigned char) (255 * point_color.g), (unsigned char) (255 * point_color.b));
+            // } else {
+                // printf("%c%c%c", 0, 0, 0);
+            // }
+            RGB_T point_color = trace(curr_ray, sphere, &t, &intersection_point, &normal, sphere_color, light_loc);
+            printf("%c%c%c", (unsigned char) (255 * point_color.r), (unsigned char) (255 * point_color.g), (unsigned char) (255 * point_color.b));
         }
     }
     printf("\n");
