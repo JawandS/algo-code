@@ -9,9 +9,9 @@ typedef struct {
     double z;
 } VP_T;
 
-// define functions
+// define functions signatures
 double len(VP_T a);
 double normalize(VP_T *a);
 double dot(VP_T a, VP_T b);
 
-#endif // VP_H
+#endif // vp.h

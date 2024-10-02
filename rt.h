@@ -13,16 +13,16 @@ typedef struct {
     VP_T center;
     double radius;
 } SPHERE_T; 
-// sphere color
+// color
 typedef struct {
     double r;
     double g;
     double b;
 } RGB_T;
 
-// declare intersects function
+// declare function signatures
 int intersects_sphere(RAY_T ray, SPHERE_T sphere, double *t, VP_T *intersection_point, VP_T *normal);
 RGB_T illuminate(RGB_T obj_color, VP_T intersection_point, VP_T normal, VP_T light_loc, RAY_T ray);
 RGB_T trace(RAY_T ray, SPHERE_T sphere, RGB_T sphere_color, VP_T light_loc);
 
-#endif
+#endif //rt.h

@@ -3,8 +3,9 @@
 #include "vp.h"
 #include "rt.h"
 
-// implement intersection function
+
 int intersects_sphere(RAY_T ray, SPHERE_T sphere, double *t, VP_T *intersection_point, VP_T *normal) {
+    // check if a ray intersects the sphere
     double a = 1.0;
     double b = 2 * (ray.dir.x * -sphere.center.x +
                     ray.dir.y * -sphere.center.y +
@@ -24,7 +25,7 @@ int intersects_sphere(RAY_T ray, SPHERE_T sphere, double *t, VP_T *intersection_
     if (pos_t <= 0 || neg_t <= 0) { // invalid sphere pos
         return 0; 
     }
-    // select smaller 
+    // select smaller t
     *t = neg_t;
     if (pos_t < neg_t)
         *t = pos_t;
@@ -40,23 +41,19 @@ int intersects_sphere(RAY_T ray, SPHERE_T sphere, double *t, VP_T *intersection_
     normal->z = intersection_point->z - sphere.center.z;
     normalize(normal);
 
+    // return true
     return 1;
 }
 
-//lighting - ray, int pt, obj color, normal, light loc 
 RGB_T illuminate(RGB_T obj_color, VP_T intersection_point, VP_T normal, VP_T light_loc, RAY_T ray) {
+    // calculate the color of each intersection point 
     RGB_T color;
+
     // ambient light
     color.r = 0.1 * obj_color.r;
     color.g = 0.0;
     color.b = 0.0;
 
-    /** diffuse - dot product gives us cos(theta)
-     get light vector: light minus intersection 
-     light loc - intersection point (three equations then normalize)
-     dp = dot(light vector, normal vector): filter for negative 
-     color.R += dp * obj_color.R
-    */ 
     // diffuse light
     VP_T light_vector = {
         .x = light_loc.x - intersection_point.x,
@@ -64,20 +61,12 @@ RGB_T illuminate(RGB_T obj_color, VP_T intersection_point, VP_T normal, VP_T lig
         .z = light_loc.z - intersection_point.z
     };
     normalize(&light_vector);
-    // normalize(&normal);
+
     double dp = dot(light_vector, normal);
     if (dp > 0) {
         color.r += dp * obj_color.r;
 
-        /*
-        Only if the dot product is positive, the light is in front of the object.
-        R = L - N * 2 * dp
-        noramlize R
-        dp2 = dot(R, ray.dir) - ray is the original ray from the eye 
-        if (dp2 > 0)
-            color.r += pow(dp2, 200)
-        */
-        // specular light
+        // specular light (only if the first dot product is positive)
         VP_T r_vector;
         r_vector.x = light_vector.x - normal.x * 2 * dp;
         r_vector.y = light_vector.y - normal.y * 2 * dp;
@@ -91,19 +80,23 @@ RGB_T illuminate(RGB_T obj_color, VP_T intersection_point, VP_T normal, VP_T lig
         }
     }
 
+    // set colors to max value
     if (color.r > 1.0)
         color.r = 1.0;
     if (color.g > 1.0)
         color.g = 1.0;
     if (color.b > 1.0)
         color.b = 1.0;
+
     return color;
 }
 
 RGB_T trace(RAY_T ray, SPHERE_T sphere, RGB_T sphere_color, VP_T light_loc) {
+    // calculate the color of each ray if it's an intersection point
     double t;
     VP_T intersection_point;
     VP_T normal;
+    // baseline color - black
     RGB_T obj_color = (RGB_T) {0.0, 0.0, 0.0};
     if (intersects_sphere(ray, sphere, &t, &intersection_point, &normal))
         obj_color = illuminate(sphere_color, intersection_point, normal, light_loc, ray);
@@ -170,17 +163,3 @@ int main() {
 
     return 0;
 }
-
-/*
-* intersects sphere
-* illuminate
-* trace: returns a color type, if intersects return illuminate else return black if no intersects 
-* main
-    init structs
-    int ppm
-    for
-        for 
-            init ray
-            call trace 
-            print ppm pixel 
-*/
