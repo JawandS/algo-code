@@ -145,15 +145,15 @@ int main() {
     for (int y = 0; y < Y_LEN; y++) {
         for (int x = 0; x < X_LEN; x++) {
             // set ray origin and direction
-            double length = sqrt((-0.5 + (x / 1000.0)) * (-0.5 + (x / 1000.0)) + (-(-0.5 + (y / 1000.0))) * (-(-0.5 + (y / 1000.0))) + 1);
             RAY_T curr_ray = {
                 .origin = eye_pos,
                 .dir = {
-                    .x = (-0.5 + (x / 1000.0)) / length,
-                    .y = -(-0.5 + (y / 1000.0)) / length,
-                    .z = 1 / length
+                    .x = (-0.5 + (x / 1000.0)),
+                    .y = -(-0.5 + (y / 1000.0)),
+                    .z = 1
                 }
             };
+            normalize(&curr_ray.dir);
             // write pixel 
             RGB_T point_color = trace(curr_ray, sphere, sphere_color, light_loc);
             printf("%c%c%c", (unsigned char) (255 * point_color.r), (unsigned char) (255 * point_color.g), (unsigned char) (255 * point_color.b));
