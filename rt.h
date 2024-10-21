@@ -19,6 +19,23 @@ typedef struct {
     double g;
     double b;
 } RGB_T;
+// plane 
+typedef struct {
+    VP_T normal;
+    double D;
+} PLANE_T;
+// object type
+typedef struct {
+    union {
+        SPHERE_T sphere;
+        PLANE_T plane;
+    };
+    char type; // s or p, indicates sphere or plane
+    RGB_T color;
+    int checker; // boolean, is a checkered plane
+    RGB_T color2; // used if checkered 
+    int (*intersect) (RAY_T ray, struct OBJ *obj, double *t, VP_T *intersection_point, VP_T *normal);
+} OBJ_T;
 
 // declare function signatures
 int intersects_sphere(RAY_T ray, SPHERE_T sphere, double *t, VP_T *intersection_point, VP_T *normal);
