@@ -1,0 +1,41 @@
+#include "vec.h"
+#include "rt.h"
+
+/*
+intersects plane function: normal and distance from origin 
+dp = normal * ray.dir 
+if dp == 0:
+    no intersection
+else:
+    t = -(dot(normal, ray.origin) + d) / dp
+    if t < 0:
+        no intersection
+    else:
+        intersection point = ray.origin + t * ray.dir
+        return intersection point
+*/
+
+int intersects_plane(RAY_T ray, PLANE_T plane, double *t, VP_T *intersection_point, VP_T *normal) {
+    double dp = dot(*normal, ray.dir);
+    if (dp == 0) { // no intersection
+        return 0;
+    } else {
+        *t = -(dot(*normal, ray.origin) + plane.D) / dp;
+        if (*t < 0) { // no intersection
+            return 0;
+        } else {
+            intersection_point->x = ray.origin.x + *t * ray.dir.x;
+            intersection_point->y = ray.origin.y + *t * ray.dir.y;
+            intersection_point->z = ray.origin.z + *t * ray.dir.z;
+            return 1;
+        }
+    }
+}
+
+/*
+checkboard illuminate
+if obj.checker and ((int) floor(int_pt.x) + 
+    (int) floor(int_pt.y) + 
+    (int) floor(int_pt.z)) & 1: # ends with 1, it's odd 
+        obj_color = color2
+*/
