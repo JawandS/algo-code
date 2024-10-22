@@ -116,8 +116,8 @@ RGB_T trace(RAY_T ray, OBJ_T *obj, RGB_T sphere_color, VP_T light_loc) {
     VP_T normal;
     // baseline color - black
     RGB_T obj_color = (RGB_T) {0.0, 0.0, 0.0};
-    if (obj->intersects(ray, obj, &t, &intersection_point, &normal))
-        obj_color = illuminate(obj, intersection_point, normal, light_loc, ray);
+    if (obj[0].intersects(ray, &obj[0], &t, &intersection_point, &normal))
+        obj_color = illuminate(&obj[0], intersection_point, normal, light_loc, ray);
     return obj_color; 
 }
 
@@ -165,6 +165,32 @@ int main() {
         },
         .intersects = &intersects_sphere
     }; 
+    // main plane
+    OBJ_T plane_one = {
+        .plane = {
+            .normal = {
+                .x = 0,
+                .y = 1,
+                .z = 0
+            },
+            .D = 1
+        },
+        .type = 'p',
+        .color = {
+            .r = 0.0,
+            .g = 0.0,
+            .b = 0.0
+        },
+        .checker = 1,
+        .color2 = {
+            .r = 1.0,
+            .g = 1.0,
+            .b = 1.0
+        },
+        .intersects = &intersects_plane
+    };
+    // array of objects
+    OBJ_T objects[] = {sphere_one, plane_one};
     // set image size 
     int Y_LEN = 1000;
     int X_LEN = 1000;
@@ -191,7 +217,7 @@ int main() {
             };
             normalize(&curr_ray.dir);
             // write pixel 
-            RGB_T point_color = trace(curr_ray, &sphere_one, sphere_color, light_loc);
+            RGB_T point_color = trace(curr_ray, objects, sphere_color, light_loc);
             printf("%c%c%c", (unsigned char) (255 * point_color.r), (unsigned char) (255 * point_color.g), (unsigned char) (255 * point_color.b));
         }
     }
