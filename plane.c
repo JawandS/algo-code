@@ -1,3 +1,4 @@
+#include "plane.h"
 #include "vec.h"
 #include "rt.h"
 
