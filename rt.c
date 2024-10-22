@@ -50,9 +50,9 @@ int intersects_sphere(RAY_T ray, OBJ_T *obj, double *t, VP_T *intersection_point
 RGB_T illuminate(OBJ_T *obj, VP_T intersection_point, VP_T normal, VP_T light_loc, RAY_T ray) {
     // decide which object color to use 
     RGB_T obj_color = obj->color;
-    if (obj->checker && ((int) floor(intersection_point.x) + 
+    if (obj->checker && (((int) floor(intersection_point.x) + 
                          (int) floor(intersection_point.y) + 
-                         (int) floor(intersection_point.z)) & 1) {
+                         (int) floor(intersection_point.z)) & 1)) {
         obj_color = obj->color2;
     }
 
@@ -75,6 +75,8 @@ RGB_T illuminate(OBJ_T *obj, VP_T intersection_point, VP_T normal, VP_T light_lo
     double dp = dot(light_vector, normal);
     if (dp > 0) {
         color.r += dp * obj_color.r;
+        color.g += dp * obj_color.g;
+        color.b += dp * obj_color.b;
 
         // specular light (only if the first dot product is positive)
         VP_T r_vector;
