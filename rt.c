@@ -50,7 +50,7 @@ int intersects_sphere(RAY_T ray, OBJ_T *obj, double *t, VP_T *intersection_point
 RGB_T illuminate(OBJ_T *obj, VP_T intersection_point, VP_T normal, VP_T light_loc, RAY_T ray) {
     // decide which object color to use 
     RGB_T obj_color = obj->color;
-    if (obj->checker && (((int) floor(intersection_point.x) + 
+    if (obj->checker && !(((int) floor(intersection_point.x) + 
                          (int) floor(intersection_point.y) + 
                          (int) floor(intersection_point.z)) & 1)) {
         obj_color = obj->color2;
@@ -121,9 +121,9 @@ RGB_T trace(RAY_T ray, OBJ_T *obj, RGB_T sphere_color, VP_T light_loc) {
     VP_T normal;
     OBJ_T *closest_obj = NULL;
     // baseline color - black
-    RGB_T obj_color = (RGB_T) {0.0, 0.0, 0.0};
+    RGB_T obj_color = (RGB_T) {0.3, 0.3, 0.5};
     // print objects array
-    for(int idx = 0; idx < 2; idx++) {
+    for(int idx = 0; idx < 3; idx++) {
         if (obj[idx].intersects(ray, &obj[idx], &t, &intersection_point, &normal)) {
             if (t < closest_t) {
                 closest_t = t;
@@ -150,7 +150,7 @@ int main() {
     VP_T light_loc = {
         .x = 5.0,
         .y = 10.0, 
-        .z = 0.0 
+        .z = -2.0 
     };
     // set eye position 
     VP_T eye_pos = {
@@ -159,18 +159,18 @@ int main() {
         .z = 0.0
     };
     // set sphere
-    OBJ_T sphere_one = {
+    OBJ_T red_sphere = {
         .sphere = {
             .center = {
-                .x = 0,
-                .y = 0,
-                .z = 10
+                .x = 0.5,
+                .y = 0.8,
+                .z = 4.0
             },
-            .radius = 2.0
+            .radius = 0.5
         },
         .type = 's',
         .color = {
-            .r = 1.0,
+            .r = 0.8,
             .g = 0.0,
             .b = 0.0
         },
@@ -182,15 +182,38 @@ int main() {
         },
         .intersects = &intersects_sphere
     }; 
+    OBJ_T green_sphere = {
+        .sphere = {
+            .center = {
+                .x = -0.5,
+                .y = 0.15,
+                .z = 4.2
+            },
+            .radius = 0.6
+        },
+        .type = 's',
+        .color = {
+            .r = 0.0,
+            .g = 0.8,
+            .b = 0.0
+        },
+        .checker = 0,
+        .color2 = {
+            .r = 0.0,
+            .g = 0.0,
+            .b = 0.0
+        },
+        .intersects = &intersects_sphere
+    }; 
     // main plane
-    OBJ_T plane_one = {
+    OBJ_T plane = {
         .plane = {
             .normal = {
                 .x = 0,
                 .y = 1,
                 .z = 0
             },
-            .D = 1
+            .D = 0.9
         },
         .type = 'p',
         .color = {
@@ -207,7 +230,7 @@ int main() {
         .intersects = &intersects_plane
     };
     // array of objects
-    OBJ_T objects[] = {sphere_one, plane_one};
+    OBJ_T objects[] = {red_sphere, green_sphere, plane};
     // set image size 
     int Y_LEN = 1000;
     int X_LEN = 1000;
