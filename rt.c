@@ -117,20 +117,21 @@ RGB_T trace(RAY_T ray, OBJ_T *obj, RGB_T sphere_color, VP_T light_loc) {
     VP_T intersection_point;
     VP_T closest_normal;
     VP_T normal;
-    OBJ_T *closest_obj;
+    OBJ_T *closest_obj = NULL;
     // baseline color - black
     RGB_T obj_color = (RGB_T) {0.0, 0.0, 0.0};
-    for(int idx = 0; idx < 1; idx++) {
-        if (obj[0].intersects(ray, &obj[0], &t, &intersection_point, &normal)) {
+    // print objects array
+    for(int idx = 0; idx < 2; idx++) {
+        if (obj[idx].intersects(ray, &obj[idx], &t, &intersection_point, &normal)) {
             if (t < closest_t) {
                 closest_t = t;
                 closest_intersection_point = intersection_point;
                 closest_normal = normal;
-                closest_obj = &obj[0];
+                closest_obj = &obj[idx];
             }
         }
     }
-    if (closest_t < 1000)
+    if (closest_t < 1000 && closest_obj != NULL)
         obj_color = illuminate(closest_obj, closest_intersection_point, closest_normal, light_loc, ray);    
     return obj_color; 
 }

@@ -16,7 +16,8 @@ else:
         return intersection point
 */
 
-int intersects_plane(RAY_T ray, PLANE_T plane, double *t, VP_T *intersection_point, VP_T *normal) {
+int intersects_plane(RAY_T ray, OBJ_T *obj, double *t, VP_T *intersection_point, VP_T *normal) {
+    PLANE_T plane = obj->plane;
     double dp = dot(*normal, ray.dir);
     if (dp == 0) { // no intersection
         return 0;
