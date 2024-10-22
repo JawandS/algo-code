@@ -31,11 +31,3 @@ int intersects_plane(RAY_T ray, PLANE_T plane, double *t, VP_T *intersection_poi
         }
     }
 }
-
-/*
-checkboard illuminate
-if obj.checker and ((int) floor(int_pt.x) + 
-    (int) floor(int_pt.y) + 
-    (int) floor(int_pt.z)) & 1: # ends with 1, it's odd 
-        obj_color = color2
-*/

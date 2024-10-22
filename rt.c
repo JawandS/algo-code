@@ -2,9 +2,10 @@
 #include <math.h>
 #include "vec.h"
 #include "rt.h"
+#include "plane.h"
 
-
-int intersects_sphere(RAY_T ray, SPHERE_T sphere, double *t, VP_T *intersection_point, VP_T *normal) {
+int intersects_sphere(RAY_T ray, OBJ_T *obj, double *t, VP_T *intersection_point, VP_T *normal) {
+    SPHERE_T sphere = obj->sphere;
     // check if a ray intersects the sphere
     double a = 1.0;
     double b = 2 * (ray.dir.x * -sphere.center.x +
@@ -45,14 +46,23 @@ int intersects_sphere(RAY_T ray, SPHERE_T sphere, double *t, VP_T *intersection_
     return 1;
 }
 
-RGB_T illuminate(RGB_T obj_color, VP_T intersection_point, VP_T normal, VP_T light_loc, RAY_T ray) {
+/*update to closest interesection point/normal */
+RGB_T illuminate(OBJ_T *obj, VP_T intersection_point, VP_T normal, VP_T light_loc, RAY_T ray) {
+    // decide which object color to use 
+    RGB_T obj_color = obj->color;
+    if (obj->checker && ((int) floor(intersection_point.x) + 
+                         (int) floor(intersection_point.y) + 
+                         (int) floor(intersection_point.z)) & 1) {
+        obj_color = obj->color2;
+    }
+
     // calculate the color of each intersection point 
     RGB_T color;
 
     // ambient light
     color.r = 0.1 * obj_color.r;
-    color.g = 0.0;
-    color.b = 0.0;
+    color.g = 0.1 * obj_color.g;
+    color.b = 0.1 * obj_color.b;
 
     // diffuse light
     VP_T light_vector = {
@@ -91,29 +101,28 @@ RGB_T illuminate(RGB_T obj_color, VP_T intersection_point, VP_T normal, VP_T lig
     return color;
 }
 
-RGB_T trace(RAY_T ray, SPHERE_T sphere, RGB_T sphere_color, VP_T light_loc) {
+/*
+updating trace:
+- set closest t to 1000 and find the lowest t, save t/interesection point/normal
+- if t < closest t, update closest t/intersection point/normal
+- have pointer to the object with closest intersection
+
+*/
+
+RGB_T trace(RAY_T ray, OBJ_T *obj, RGB_T sphere_color, VP_T light_loc) {
     // calculate the color of each ray if it's an intersection point
     double t;
     VP_T intersection_point;
     VP_T normal;
     // baseline color - black
     RGB_T obj_color = (RGB_T) {0.0, 0.0, 0.0};
-    if (intersects_sphere(ray, sphere, &t, &intersection_point, &normal))
-        obj_color = illuminate(sphere_color, intersection_point, normal, light_loc, ray);
+    if (obj->intersects(ray, obj, &t, &intersection_point, &normal))
+        obj_color = illuminate(&obj, intersection_point, normal, light_loc, ray);
     return obj_color; 
 }
 
 // main method
 int main() {
-    // set sphere
-    SPHERE_T sphere = {
-        .center = {
-            .x = 0,
-            .y = 0,
-            .z = 10
-        },
-        .radius = 2.0
-    }; 
     // set sphere color 
     RGB_T sphere_color = {
         .r = 1.0,
@@ -132,9 +141,36 @@ int main() {
         .y = 0.0,
         .z = 0.0
     };
+    // set sphere
+    OBJ_T sphere_one = {
+        .sphere = {
+            .center = {
+                .x = 0,
+                .y = 0,
+                .z = 10
+            },
+            .radius = 2.0
+        },
+        .type = 's',
+        .color = {
+            .r = 1.0,
+            .g = 0.0,
+            .b = 0.0
+        },
+        .checker = 0,
+        .color2 = {
+            .r = 0.0,
+            .g = 0.0,
+            .b = 0.0
+        },
+        .intersects = &intersects_sphere
+    }; 
     // set image size 
     int Y_LEN = 1000;
     int X_LEN = 1000;
+    /*
+    Create a rray of the objects in the scene, and iterate through them in trace 
+    */
 
     // initialize image file header
     printf("P6\n");
@@ -155,7 +191,7 @@ int main() {
             };
             normalize(&curr_ray.dir);
             // write pixel 
-            RGB_T point_color = trace(curr_ray, sphere, sphere_color, light_loc);
+            RGB_T point_color = trace(curr_ray, &sphere_one, sphere_color, light_loc);
             printf("%c%c%c", (unsigned char) (255 * point_color.r), (unsigned char) (255 * point_color.g), (unsigned char) (255 * point_color.b));
         }
     }
