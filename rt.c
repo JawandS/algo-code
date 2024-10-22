@@ -117,7 +117,7 @@ RGB_T trace(RAY_T ray, OBJ_T *obj, RGB_T sphere_color, VP_T light_loc) {
     // baseline color - black
     RGB_T obj_color = (RGB_T) {0.0, 0.0, 0.0};
     if (obj->intersects(ray, obj, &t, &intersection_point, &normal))
-        obj_color = illuminate(&obj, intersection_point, normal, light_loc, ray);
+        obj_color = illuminate(obj, intersection_point, normal, light_loc, ray);
     return obj_color; 
 }
 
