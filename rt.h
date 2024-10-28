@@ -53,7 +53,6 @@ typedef struct {
 // declare function signatures
 typedef int (*intersects)(RAY_T, OBJ_T*, double*, VP_T*, VP_T*);
 int intersects_sphere(RAY_T ray, OBJ_T *obj, double *t, VP_T *intersection_point, VP_T *normal);
-RGB_T illuminate(OBJ_T *obj, VP_T intersection_point, VP_T normal, SCENE_T *scene, RAY_T ray);
 RGB_T trace(RAY_T ray, SCENE_T *scene);
 
 #endif //rt.h
