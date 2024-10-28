@@ -24,6 +24,10 @@ typedef struct {
     VP_T normal;
     double D;
 } PLANE_T;
+// light
+typedef struct light {
+    VP_T loc; // light location
+} LIGHT_T;
 // object type
 typedef struct OBJ {
     union {
@@ -35,7 +39,16 @@ typedef struct OBJ {
     int checker; // boolean, is a checkered plane
     RGB_T color2; // used if checkered 
     int (*intersects) (RAY_T ray, struct OBJ *obj, double *t, VP_T *intersection_point, VP_T *normal);
+    struct OBJ *next; // pointer to the next object in the linked list 
 } OBJ_T;
+// scene type
+typedef struct {
+    OBJ_T *objs; // linked list of objects
+    LIGHT_T light; // location of the light
+    int start_x; // default -0.5, top left of the image 
+    int start_y; // default 0.5
+    double pixel_size; // default 1/1000
+} SCENE_T;
 
 // declare function signatures
 typedef int (*intersects)(RAY_T, OBJ_T*, double*, VP_T*, VP_T*);
