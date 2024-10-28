@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <math.h>
+#include <stdlib.h>
 #include "vec.h"
 #include "rt.h"
 #include "plane.h"
@@ -227,10 +228,12 @@ int main() {
     int Y_LEN = 1000;
     int X_LEN = 1000;
 
+    // open the file 
+    FILE *fimg = fopen("img.ppm", "w");
     // initialize image file header
-    printf("P6\n");
-    printf("1000 1000\n");
-    printf("255\n");
+    fprintf(fimg, "P6\n");
+    fprintf(fimg, "1000 1000\n");
+    fprintf(fimg, "255\n");
 
     // go through image 
     for (int y = 0; y < Y_LEN; y++) {
@@ -247,10 +250,53 @@ int main() {
             normalize(&curr_ray.dir);
             // write pixel 
             RGB_T point_color = trace(curr_ray, objects, sphere_color, light_loc);
-            printf("%c%c%c", (unsigned char) (255 * point_color.r), (unsigned char) (255 * point_color.g), (unsigned char) (255 * point_color.b));
+            fprintf(fimg, "%c%c%c", (unsigned char) (255 * point_color.r), (unsigned char) (255 * point_color.g), (unsigned char) (255 * point_color.b));
         }
     }
     printf("\n");
 
     return 0;
 }
+
+/* Create linked list of objects - init function 
+// linked list of objects
+scene->objs = NULL;
+OBJ_T *node = NULL;
+while (new lines in file) { // read from file
+    node = (OBJ_T*) malloc(sizeof(OBJ_T));
+    // initialize the node, ex: node->sphere.ctr.x = 0.0; 
+    // have node->next point to list and set list to node 
+    node->next = scene->objs;
+    scene->objs = node; 
+}
+*/
+
+
+/* file handling
+FILE *file = fopen("file.txt", "r");
+---
+reading:
+fscanf(fp, "%c, &obj->type);
+--- read line by line
+run loop until end of file
+    read character (s or p)
+    if s:
+        set type to s 
+        3 more lines to read: center, radius, color
+        set checker to false
+        set intersects function pointer
+    if p:
+        set type to p
+        4 more lines: normal, d, color1, color2 
+        assume checker is true 
+        set intersects function pointer 
+    if l:
+        1 line: fscanf(fp, "%lf %lf %lf", &scene->light.loc.x, &scene->light.loc.y, &scene->light.loc.z);
+*/
+
+/*
+Tasks:
+1. Create a linked list of objects
+2. Include scene structure (in main). Pass to init 
+3. Updating to file writing 
+*/
