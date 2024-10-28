@@ -25,7 +25,7 @@ typedef struct {
     double D;
 } PLANE_T;
 // object type
-typedef struct {
+typedef struct OBJ {
     union {
         SPHERE_T sphere;
         PLANE_T plane;
