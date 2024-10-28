@@ -137,6 +137,91 @@ RGB_T trace(RAY_T ray, OBJ_T *objs, RGB_T sphere_color, SCENE_T *scene) {
         obj_color = illuminate(closest_obj, closest_intersection_point, closest_normal, scene, ray);    
     return obj_color; 
 }
+// initialization function
+/* Create linked list of objects - init function 
+// linked list of objects
+scene->objs = NULL;
+OBJ_T *node = NULL;
+while (new lines in file) { // read from file
+    node = (OBJ_T*) malloc(sizeof(OBJ_T));
+    // initialize the node, ex: node->sphere.ctr.x = 0.0; 
+    // have node->next point to list and set list to node 
+    node->next = scene->objs;
+    scene->objs = node; 
+}
+*/
+
+
+/* file handling
+FILE *file = fopen("file.txt", "r");
+---
+reading:
+fscanf(fp, "%c, &obj->type);
+--- read line by line
+run loop until end of file
+    read character (s or p)
+    if s:
+        set type to s 
+        3 more lines to read: center, radius, color
+        set checker to false
+        set intersects function pointer
+    if p:
+        set type to p
+        4 more lines: normal, d, color1, color2 
+        assume checker is true 
+        set intersects function pointer 
+    if l:
+        1 line: fscanf(fp, "%lf %lf %lf", &scene->light.loc.x, &scene->light.loc.y, &scene->light.loc.z);
+*/
+void init(SCENE_T *scene) {
+    // default values for scene 
+    scene->objs = NULL;
+    scene->start_x = -0.5;
+    scene->start_y = 0.5;
+    scene->pixel_size = 1/1000;
+    // read file for object information
+    FILE *file = fopen("scene.txt", "r");
+    OBJ_T *node = NULL;
+    char info_type; // what the information is 
+    while (!feof(file)) { // iterate while file is not empty 
+        // allocate space for object
+        node = (OBJ_T*) malloc(sizeof(OBJ_T));
+        // read the type of object
+        fscanf(file, "%c", &info_type);
+        if (info_type == 's') { // sphere type
+            node->type = 's'; // set type to sphere
+            // read sphere center
+            fscanf(file, "%lf %lf %lf", &node->sphere.center.x, &node->sphere.center.y, &node->sphere.center.z);
+            // read sphere radius
+            fscanf(file, "%lf", &node->sphere.radius);
+            // read sphere color
+            fscanf(file, "%lf %lf %lf", &node->color.r, &node->color.g, &node->color.b);
+            // set checker to false
+            node->checker = 0;
+            // add it to the objects linked list
+            node->next = scene->objs;
+            scene->objs = node;
+        } else if (info_type == 'p') { // plane type
+            node->type = 'p'; // set type to plane
+            // read plane normal
+            fscanf(file, "%lf %lf %lf", &node->plane.normal.x, &node->plane.normal.y, &node->plane.normal.z);
+            // read plane distance 
+            fscanf(file, "%lf", &node->plane.D);
+            // read plane color 
+            fscanf(file, "%lf %lf %lf", &node->color.r, &node->color.g, &node->color.b);
+            // set checker to true
+            node->checker = 1;
+            // read plane color2
+            fscanf(file, "%lf %lf %lf", &node->color2.r, &node->color2.g, &node->color2.b);
+            // add it to the objects linked list
+            node->next = scene->objs;
+            scene->objs = node;
+        } else if (info_type == 'l') { // light type
+            // read light location
+            fscanf(file, "%lf %lf %lf", &scene->light.loc.x, &scene->light.loc.y, &scene->light.loc.z);
+        }
+    }
+}
 
 // main method
 int main() {
@@ -145,14 +230,6 @@ int main() {
         .r = 1.0,
         .g = 0.0,
         .b = 0.0
-    };
-    // set light
-    LIGHT_T light = {
-        .loc = {
-            .x = 5.0,
-            .y = 10.0,
-            .z = -2.0
-        }
     };
     // set eye position 
     VP_T eye_pos = {
@@ -231,14 +308,9 @@ int main() {
         },
         .intersects = &intersects_plane
     };
-    // create scene
-    SCENE_T scene = {
-        .objs = NULL,
-        .light = light,
-        .start_x = -0.5,
-        .start_y = 0.5,
-        .pixel_size = 1/1000
-    };
+    // initialize scene
+    SCENE_T scene;
+    init(&scene);
     // array of objects
     OBJ_T objects[] = {red_sphere, green_sphere, plane};
     // set image size 
@@ -274,42 +346,6 @@ int main() {
 
     return 0;
 }
-
-/* Create linked list of objects - init function 
-// linked list of objects
-scene->objs = NULL;
-OBJ_T *node = NULL;
-while (new lines in file) { // read from file
-    node = (OBJ_T*) malloc(sizeof(OBJ_T));
-    // initialize the node, ex: node->sphere.ctr.x = 0.0; 
-    // have node->next point to list and set list to node 
-    node->next = scene->objs;
-    scene->objs = node; 
-}
-*/
-
-
-/* file handling
-FILE *file = fopen("file.txt", "r");
----
-reading:
-fscanf(fp, "%c, &obj->type);
---- read line by line
-run loop until end of file
-    read character (s or p)
-    if s:
-        set type to s 
-        3 more lines to read: center, radius, color
-        set checker to false
-        set intersects function pointer
-    if p:
-        set type to p
-        4 more lines: normal, d, color1, color2 
-        assume checker is true 
-        set intersects function pointer 
-    if l:
-        1 line: fscanf(fp, "%lf %lf %lf", &scene->light.loc.x, &scene->light.loc.y, &scene->light.loc.z);
-*/
 
 /*
 Tasks:
