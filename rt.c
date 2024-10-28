@@ -48,7 +48,7 @@ int intersects_sphere(RAY_T ray, OBJ_T *obj, double *t, VP_T *intersection_point
 }
 
 /*update to closest interesection point/normal */
-RGB_T illuminate(OBJ_T *obj, VP_T intersection_point, VP_T normal, VP_T light_loc, RAY_T ray) {
+RGB_T illuminate(OBJ_T *obj, VP_T intersection_point, VP_T normal, SCENE_T *scene, RAY_T ray) {
     // decide which object color to use 
     RGB_T obj_color = obj->color;
     if (obj->checker && !(((int) floor(intersection_point.x) + 
@@ -67,9 +67,9 @@ RGB_T illuminate(OBJ_T *obj, VP_T intersection_point, VP_T normal, VP_T light_lo
 
     // diffuse light
     VP_T light_vector = {
-        .x = light_loc.x - intersection_point.x,
-        .y = light_loc.y - intersection_point.y,
-        .z = light_loc.z - intersection_point.z
+        .x = scene->light.loc.x - intersection_point.x,
+        .y = scene->light.loc.y - intersection_point.y,
+        .z = scene->light.loc.z - intersection_point.z
     };
     normalize(&light_vector);
 
@@ -104,7 +104,7 @@ RGB_T illuminate(OBJ_T *obj, VP_T intersection_point, VP_T normal, VP_T light_lo
     return color;
 }
 
-RGB_T trace(RAY_T ray, OBJ_T *obj, RGB_T sphere_color, VP_T light_loc) {
+RGB_T trace(RAY_T ray, OBJ_T *objs, RGB_T sphere_color, SCENE_T *scene) {
     // calculate the color of each ray if it's an intersection point
     double closest_t = 1000;
     double t;
@@ -116,18 +116,25 @@ RGB_T trace(RAY_T ray, OBJ_T *obj, RGB_T sphere_color, VP_T light_loc) {
     // baseline color
     RGB_T obj_color = (RGB_T) {0.3, 0.3, 0.5};
     // print objects array
+    /* TODO
+    iterate through objects linked list 
+    OBJ_T *curr;
+    for (curr = scene->objs; curr != NULL; curr = curr->next){
+        if(*curr->intersects)
+    }
+    */
     for(int idx = 0; idx < 3; idx++) {
-        if (obj[idx].intersects(ray, &obj[idx], &t, &intersection_point, &normal)) {
+        if (objs[idx].intersects(ray, &objs[idx], &t, &intersection_point, &normal)) {
             if (t < closest_t) {
                 closest_t = t;
                 closest_intersection_point = intersection_point;
                 closest_normal = normal;
-                closest_obj = &obj[idx];
+                closest_obj = &objs[idx];
             }
         }
     }
     if (closest_t < 1000 && closest_obj != NULL)
-        obj_color = illuminate(closest_obj, closest_intersection_point, closest_normal, light_loc, ray);    
+        obj_color = illuminate(closest_obj, closest_intersection_point, closest_normal, scene, ray);    
     return obj_color; 
 }
 
@@ -139,11 +146,13 @@ int main() {
         .g = 0.0,
         .b = 0.0
     };
-    // set light location
-    VP_T light_loc = {
-        .x = 5.0,
-        .y = 10.0, 
-        .z = -2.0 
+    // set light
+    LIGHT_T light = {
+        .loc = {
+            .x = 5.0,
+            .y = 10.0,
+            .z = -2.0
+        }
     };
     // set eye position 
     VP_T eye_pos = {
@@ -222,6 +231,14 @@ int main() {
         },
         .intersects = &intersects_plane
     };
+    // create scene
+    SCENE_T scene = {
+        .objs = NULL,
+        .light = light,
+        .start_x = -0.5,
+        .start_y = 0.5,
+        .pixel_size = 1/1000
+    };
     // array of objects
     OBJ_T objects[] = {red_sphere, green_sphere, plane};
     // set image size 
@@ -249,7 +266,7 @@ int main() {
             };
             normalize(&curr_ray.dir);
             // write pixel 
-            RGB_T point_color = trace(curr_ray, objects, sphere_color, light_loc);
+            RGB_T point_color = trace(curr_ray, objects, sphere_color, &scene); // replace with scene
             fprintf(fimg, "%c%c%c", (unsigned char) (255 * point_color.r), (unsigned char) (255 * point_color.g), (unsigned char) (255 * point_color.b));
         }
     }
@@ -299,4 +316,7 @@ Tasks:
 1. Create a linked list of objects
 2. Include scene structure (in main). Pass to init 
 3. Updating to file writing 
+4. update trace to use linked list
+5. include vp subtract 
+6. finish light.c 
 */
