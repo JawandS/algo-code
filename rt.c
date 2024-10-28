@@ -104,7 +104,7 @@ RGB_T illuminate(OBJ_T *obj, VP_T intersection_point, VP_T normal, SCENE_T *scen
     return color;
 }
 
-RGB_T trace(RAY_T ray, OBJ_T *objs, RGB_T sphere_color, SCENE_T *scene) {
+RGB_T trace(RAY_T ray, SCENE_T *scene) {
     // calculate the color of each ray if it's an intersection point
     double closest_t = 1000;
     double t;
@@ -224,7 +224,7 @@ int main() {
             };
             normalize(&curr_ray.dir);
             // write pixel 
-            RGB_T point_color = trace(curr_ray, objects, sphere_color, &scene); // replace with scene
+            RGB_T point_color = trace(curr_ray, &scene); // replace with scene
             fprintf(fimg, "%c%c%c", (unsigned char) (255 * point_color.r), (unsigned char) (255 * point_color.g), (unsigned char) (255 * point_color.b));
         }
     }
