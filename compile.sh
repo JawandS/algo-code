@@ -1,2 +1,2 @@
-gcc rt.c vec.c plane.c -g -lm -o rt
+gcc rt.c vp.c plane.c -g -lm -o rt
 ./rt

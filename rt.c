@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <math.h>
 #include <stdlib.h>
-#include "vec.h"
+#include "vp.h"
 #include "rt.h"
 #include "plane.h"
 

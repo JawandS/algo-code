@@ -1,4 +1,4 @@
-// vec.h
+// vp.h
 #ifndef VP_H
 #define VP_H
 
@@ -14,4 +14,4 @@ double len(VP_T a);
 double normalize(VP_T *a);
 double dot(VP_T a, VP_T b);
 
-#endif // vec.h
+#endif // vp.h
