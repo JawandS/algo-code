@@ -8,13 +8,12 @@ double length(VP_T a) {
                 a.z * a.z);
 }
 
-double normalize(VP_T *a) {
+void normalize(VP_T *a) {
     // normalize a vector
     double len = length(*a);
     a->x /= len;
     a->y /= len;
     a->z /= len;
-    return len;
 }
 
 double dot(VP_T a, VP_T b) {
@@ -22,4 +21,14 @@ double dot(VP_T a, VP_T b) {
     return a.x * b.x + 
            a.y * b.y + 
            a.z * b.z;
+}
+
+VP_T diff(VP_T a, VP_T b) {
+    // return the difference between two vectors
+    VP_T new_vec = {
+        .x = a.x - b.x,
+        .y = a.y - b.y,
+        .z = a.z - b.z
+    };
+    return new_vec;
 }
