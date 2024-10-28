@@ -115,64 +115,25 @@ RGB_T trace(RAY_T ray, OBJ_T *objs, RGB_T sphere_color, SCENE_T *scene) {
     OBJ_T *closest_obj = NULL;
     // baseline color
     RGB_T obj_color = (RGB_T) {0.3, 0.3, 0.5};
-    // print objects array
-    /* TODO
-    iterate through objects linked list 
+    // iterate through objects in scene
     OBJ_T *curr;
-    for (curr = scene->objs; curr != NULL; curr = curr->next){
-        if(*curr->intersects)
-    }
-    */
-    for(int idx = 0; idx < 3; idx++) {
-        if (objs[idx].intersects(ray, &objs[idx], &t, &intersection_point, &normal)) {
+    for(curr = scene->objs; curr != NULL; curr = curr->next) {
+        if (curr->intersects(ray, curr, &t, &intersection_point, &normal)) {
             if (t < closest_t) {
                 closest_t = t;
                 closest_intersection_point = intersection_point;
                 closest_normal = normal;
-                closest_obj = &objs[idx];
+                closest_obj = curr;
             }
         }
     }
+    // get object color
     if (closest_t < 1000 && closest_obj != NULL)
         obj_color = illuminate(closest_obj, closest_intersection_point, closest_normal, scene, ray);    
     return obj_color; 
 }
+
 // initialization function
-/* Create linked list of objects - init function 
-// linked list of objects
-scene->objs = NULL;
-OBJ_T *node = NULL;
-while (new lines in file) { // read from file
-    node = (OBJ_T*) malloc(sizeof(OBJ_T));
-    // initialize the node, ex: node->sphere.ctr.x = 0.0; 
-    // have node->next point to list and set list to node 
-    node->next = scene->objs;
-    scene->objs = node; 
-}
-*/
-
-
-/* file handling
-FILE *file = fopen("file.txt", "r");
----
-reading:
-fscanf(fp, "%c, &obj->type);
---- read line by line
-run loop until end of file
-    read character (s or p)
-    if s:
-        set type to s 
-        3 more lines to read: center, radius, color
-        set checker to false
-        set intersects function pointer
-    if p:
-        set type to p
-        4 more lines: normal, d, color1, color2 
-        assume checker is true 
-        set intersects function pointer 
-    if l:
-        1 line: fscanf(fp, "%lf %lf %lf", &scene->light.loc.x, &scene->light.loc.y, &scene->light.loc.z);
-*/
 void init(SCENE_T *scene) {
     // default values for scene 
     scene->objs = NULL;
@@ -198,6 +159,8 @@ void init(SCENE_T *scene) {
             fscanf(file, "%lf %lf %lf", &node->color.r, &node->color.g, &node->color.b);
             // set checker to false
             node->checker = 0;
+            // set interects function
+            node->intersects = &intersects_sphere;
             // add it to the objects linked list
             node->next = scene->objs;
             scene->objs = node;
@@ -213,6 +176,8 @@ void init(SCENE_T *scene) {
             node->checker = 1;
             // read plane color2
             fscanf(file, "%lf %lf %lf", &node->color2.r, &node->color2.g, &node->color2.b);
+            // set interects function
+            node->intersects = &intersects_plane;
             // add it to the objects linked list
             node->next = scene->objs;
             scene->objs = node;
@@ -225,94 +190,15 @@ void init(SCENE_T *scene) {
 
 // main method
 int main() {
-    // set sphere color 
-    RGB_T sphere_color = {
-        .r = 1.0,
-        .g = 0.0,
-        .b = 0.0
-    };
     // set eye position 
     VP_T eye_pos = {
         .x = 0.0,
         .y = 0.0,
         .z = 0.0
     };
-    // set sphere
-    OBJ_T red_sphere = {
-        .sphere = {
-            .center = {
-                .x = 0.5,
-                .y = 0.8,
-                .z = 4.0
-            },
-            .radius = 0.5
-        },
-        .type = 's',
-        .color = {
-            .r = 0.8,
-            .g = 0.0,
-            .b = 0.0
-        },
-        .checker = 0,
-        .color2 = {
-            .r = 0.0,
-            .g = 0.0,
-            .b = 0.0
-        },
-        .intersects = &intersects_sphere
-    }; 
-    OBJ_T green_sphere = {
-        .sphere = {
-            .center = {
-                .x = -0.5,
-                .y = 0.15,
-                .z = 4.2
-            },
-            .radius = 0.6
-        },
-        .type = 's',
-        .color = {
-            .r = 0.0,
-            .g = 0.8,
-            .b = 0.0
-        },
-        .checker = 0,
-        .color2 = {
-            .r = 0.0,
-            .g = 0.0,
-            .b = 0.0
-        },
-        .intersects = &intersects_sphere
-    }; 
-    // main plane
-    OBJ_T plane = {
-        .plane = {
-            .normal = {
-                .x = 0,
-                .y = 1,
-                .z = 0
-            },
-            .D = 0.9
-        },
-        .type = 'p',
-        .color = {
-            .r = 0.0,
-            .g = 0.0,
-            .b = 0.0
-        },
-        .checker = 1,
-        .color2 = {
-            .r = 1.0,
-            .g = 1.0,
-            .b = 1.0
-        },
-        .intersects = &intersects_plane
-    };
     // initialize scene
     SCENE_T scene;
     init(&scene);
-    // array of objects
-    OBJ_T objects[] = {red_sphere, green_sphere, plane};
     // set image size 
     int Y_LEN = 1000;
     int X_LEN = 1000;
