@@ -103,14 +103,6 @@ RGB_T illuminate(OBJ_T *obj, VP_T intersection_point, VP_T normal, VP_T light_lo
     return color;
 }
 
-/*
-updating trace:
-- set closest t to 1000 and find the lowest t, save t/interesection point/normal
-- if t < closest t, update closest t/intersection point/normal
-- have pointer to the object with closest intersection
-
-*/
-
 RGB_T trace(RAY_T ray, OBJ_T *obj, RGB_T sphere_color, VP_T light_loc) {
     // calculate the color of each ray if it's an intersection point
     double closest_t = 1000;
@@ -120,7 +112,7 @@ RGB_T trace(RAY_T ray, OBJ_T *obj, RGB_T sphere_color, VP_T light_loc) {
     VP_T closest_normal;
     VP_T normal;
     OBJ_T *closest_obj = NULL;
-    // baseline color - black
+    // baseline color
     RGB_T obj_color = (RGB_T) {0.3, 0.3, 0.5};
     // print objects array
     for(int idx = 0; idx < 3; idx++) {
@@ -234,9 +226,6 @@ int main() {
     // set image size 
     int Y_LEN = 1000;
     int X_LEN = 1000;
-    /*
-    Create a rray of the objects in the scene, and iterate through them in trace 
-    */
 
     // initialize image file header
     printf("P6\n");

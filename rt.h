@@ -1,4 +1,4 @@
-
+// rt.h
 #ifndef RT_H
 #define RT_H
 #include "vec.h"

@@ -1,5 +1,5 @@
+#include <math.h>
 #include "vec.h"
-# include <math.h>
 
 double length(VP_T a) {
     // get the length of a vector 
