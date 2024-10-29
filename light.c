@@ -28,7 +28,9 @@ int shadow_test(VP_T intersection_point, SCENE_T *scene) {
     VP_T tmp_int_pt;
     for (curr = scene->objs; curr != NULL; curr = curr->next) {
         if (curr->intersects(shadow_ray, curr, &t, &tmp_int_pt, &normal)) {
-            return 1; // In shadow
+            // make sure the intersection point is not itself
+            if (t > 0.0001)
+                return 1; // In shadow
         }
     }
     return 0; // Not in shadow

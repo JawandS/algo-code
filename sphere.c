@@ -6,7 +6,7 @@
 
 int intersects_sphere(RAY_T ray, OBJ_T *obj, double *t, VP_T *intersection_point, VP_T *normal) {
     SPHERE_T sphere = obj->sphere;
-    // get hte vector from the ray origin to the sphere center
+    // get the vector from the ray origin to the sphere center
     VP_T oc = diff(ray.origin, sphere.center);
     // check if a ray intersects the sphere
     double a = 1.0;
