@@ -17,7 +17,7 @@ for (objs) {
 int shadow_test(VP_T intersection_point, SCENE_T *scene) {
     // Create the shadow ray 
     RAY_T shadow_ray;
-    shadow_ray.origin = scene->light.loc;
+    shadow_ray.origin = intersection_point;
     shadow_ray.dir = diff(scene->light.loc, intersection_point);
     normalize(&shadow_ray.dir);
 
@@ -53,7 +53,7 @@ RGB_T illuminate(OBJ_T *obj, VP_T intersection_point, VP_T normal, SCENE_T *scen
     color.b = 0.1 * obj_color.b;
 
     // check for shadow
-    if (!shadow_test(intersection_point, scene)) {
+    if (1 || !shadow_test(intersection_point, scene)) {
         // diffuse light
         VP_T light_vector = {
             .x = scene->light.loc.x - intersection_point.x,
