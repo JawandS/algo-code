@@ -53,13 +53,9 @@ RGB_T illuminate(OBJ_T *obj, VP_T intersection_point, VP_T normal, SCENE_T *scen
     color.b = 0.1 * obj_color.b;
 
     // check for shadow
-    if (1 || !shadow_test(intersection_point, scene)) {
+    if (!shadow_test(intersection_point, scene)) {
         // diffuse light
-        VP_T light_vector = {
-            .x = scene->light.loc.x - intersection_point.x,
-            .y = scene->light.loc.y - intersection_point.y,
-            .z = scene->light.loc.z - intersection_point.z
-        };
+        VP_T light_vector = diff(scene->light.loc, intersection_point);
         normalize(&light_vector);
 
         double dp = dot(light_vector, normal);
