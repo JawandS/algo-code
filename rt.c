@@ -89,6 +89,8 @@ void init(SCENE_T *scene) {
             fscanf(file, "%lf %lf %lf", &scene->light.loc.x, &scene->light.loc.y, &scene->light.loc.z);
         }
     }
+    // close the file
+    fclose(file);
 }
 
 // main method
@@ -133,6 +135,9 @@ int main() {
     }
     printf("\n");
 
+    // close the file
+    fclose(fimg);
+    // exit
     return 0;
 }
 
