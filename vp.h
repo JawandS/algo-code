@@ -10,7 +10,7 @@ typedef struct {
 } VP_T;
 
 // define functions signatures
-double len(VP_T a);
+double length(VP_T a);
 void normalize(VP_T *a);
 double dot(VP_T a, VP_T b);
 VP_T diff(VP_T a, VP_T b);

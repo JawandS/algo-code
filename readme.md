@@ -1,3 +1,5 @@
+# FIX LIGHT ATTENTUATION 
+
 /*
 # All of the files:
 ## rt.h     : all objects

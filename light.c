@@ -4,10 +4,6 @@
 #include "vp.h"
 #include "light.h"
 
-/* shadow test, called from illuminate (after ambient before diffuse)
-skip checking the current object, check all other objects
-*/
-
 static int shadow_test(VP_T intersection_point, OBJ_T *curr_obj, SCENE_T *scene) {
     // Create the shadow ray 
     RAY_T shadow_ray;
@@ -51,15 +47,20 @@ RGB_T illuminate(OBJ_T *obj, VP_T intersection_point, VP_T normal, SCENE_T *scen
 
     // check for shadow
     if (!shadow_test(intersection_point, obj, scene)) {
+        // get the attentuation - TODO FIX THIS 
+        double dl = length(diff(scene->light.loc, intersection_point));
+        double atten_b = (0.002 * dl) * (0.002 * dl) + 0.02 * dl + 0.2;
+        double atten = 1 / atten_b;
+
         // diffuse light
         VP_T light_vector = diff(scene->light.loc, intersection_point);
         normalize(&light_vector);
 
         double dp = dot(light_vector, normal);
         if (dp > 0) {
-            color.r += dp * obj_color.r;
-            color.g += dp * obj_color.g;
-            color.b += dp * obj_color.b;
+            color.r += dp * obj_color.r * atten;
+            color.g += dp * obj_color.g * atten;
+            color.b += dp * obj_color.b * atten;
 
             // specular light (only if the first dot product is positive)
             VP_T r_vector;
@@ -69,9 +70,9 @@ RGB_T illuminate(OBJ_T *obj, VP_T intersection_point, VP_T normal, SCENE_T *scen
             normalize(&r_vector);
             double dp2 = dot(r_vector, ray.dir);
             if (dp2 > 0) {
-                color.r += pow(dp2, 200);
-                color.g += pow(dp2, 200);
-                color.b += pow(dp2, 200);
+                color.r += pow(dp2, 200) * atten;
+                color.g += pow(dp2, 200) * atten;
+                color.b += pow(dp2, 200) * atten;
             }
         }
     }
