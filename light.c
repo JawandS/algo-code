@@ -5,16 +5,10 @@
 #include "light.h"
 
 /* shadow test, called from illuminate (after ambient before diffuse)
-- if the light ray intersects an object, the point is in shadow
-- arguments: int_pt, scene 
-RAY_T shadow_ray = 
-shadow_ray.vector =  // then normalize
-for (objs) {
-    if intersect: is in shadow, return 1;
-}
+skip checking the current object, check all other objects
 */
 
-int shadow_test(VP_T intersection_point, SCENE_T *scene) {
+static int shadow_test(VP_T intersection_point, OBJ_T *curr_obj, SCENE_T *scene) {
     // Create the shadow ray 
     RAY_T shadow_ray;
     shadow_ray.origin = intersection_point;
@@ -27,10 +21,11 @@ int shadow_test(VP_T intersection_point, SCENE_T *scene) {
     VP_T normal;
     VP_T tmp_int_pt;
     for (curr = scene->objs; curr != NULL; curr = curr->next) {
+        if (curr == curr_obj) 
+            continue; // don't check the same object
         if (curr->intersects(shadow_ray, curr, &t, &tmp_int_pt, &normal)) {
             // make sure the intersection point is not itself
-            if (t > 0.0001)
-                return 1; // In shadow
+            return 1; // in shadow
         }
     }
     return 0; // Not in shadow
@@ -55,7 +50,7 @@ RGB_T illuminate(OBJ_T *obj, VP_T intersection_point, VP_T normal, SCENE_T *scen
     color.b = 0.1 * obj_color.b;
 
     // check for shadow
-    if (!shadow_test(intersection_point, scene)) {
+    if (!shadow_test(intersection_point, obj, scene)) {
         // diffuse light
         VP_T light_vector = diff(scene->light.loc, intersection_point);
         normalize(&light_vector);
