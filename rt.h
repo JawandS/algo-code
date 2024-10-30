@@ -45,8 +45,8 @@ typedef struct OBJ {
 typedef struct {
     OBJ_T *objs; // linked list of objects
     LIGHT_T light; // location of the light
-    int start_x; // default -0.5, top left of the image 
-    int start_y; // default 0.5
+    double start_x; // default -0.5, top left of the image 
+    double start_y; // default 0.5
     double pixel_size; // default 1/1000
 } SCENE_T;
 

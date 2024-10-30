@@ -40,9 +40,6 @@ RGB_T trace(RAY_T ray, SCENE_T *scene) {
 void init(SCENE_T *scene) {
     // default values for scene 
     scene->objs = NULL;
-    scene->start_x = -0.5;
-    scene->start_y = 0.5;
-    scene->pixel_size = 1/1000;
     // read file for object information
     FILE *file = fopen("scene.txt", "r");
     OBJ_T *node = NULL;
@@ -101,18 +98,32 @@ int main() {
         .y = 0.0,
         .z = 0.0
     };
+
     // initialize scene
     SCENE_T scene;
     init(&scene);
-    // set image size 
-    int Y_LEN = 1000;
-    int X_LEN = 1000;
+    // manual initialization: 1920 x 1080
+    /* arbitrary aspect ratio
+    width / height : width dimention, hieght is 1 by reference 
+    still want to center the image at the origin 
+    starting_y 
+    ex: 1920 x 1080 - cols x rows, x is bigger 
+    pixel size is 1 / smaller dimension 
+    start_y = 0.5
+    start_x = -(number_cols/number_row) / 2
+    */
+    int X_LEN = 640;
+    int Y_LEN = 480;
+    scene.start_x = - ((double) X_LEN / (double) Y_LEN) / 2.0;
+    scene.start_y = 0.5;
+    scene.pixel_size = 1.0 / (double) Y_LEN;
+    printf("start_x: %f, start_y: %f, pixel_size: %f\n", scene.start_x, scene.start_y, scene.pixel_size);
 
     // open the file 
     FILE *fimg = fopen("img.ppm", "w");
     // initialize image file header
     fprintf(fimg, "P6\n");
-    fprintf(fimg, "1000 1000\n");
+    fprintf(fimg, "%d %d\n", X_LEN, Y_LEN);
     fprintf(fimg, "255\n");
 
     // go through image 
@@ -122,8 +133,8 @@ int main() {
             RAY_T curr_ray = {
                 .origin = eye_pos,
                 .dir = {
-                    .x = (-0.5 + (x / 1000.0)),
-                    .y = -(-0.5 + (y / 1000.0)),
+                    .x = (scene.start_x + (x / (double) Y_LEN)),
+                    .y = -(-scene.start_y + (y / (double) Y_LEN)),
                     .z = 1
                 }
             };

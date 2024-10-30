@@ -1,4 +1,5 @@
 # FIX LIGHT ATTENTUATION 
+# FIX arbitrary aspect ratio
 
 /*
 # All of the files:
