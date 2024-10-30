@@ -47,12 +47,10 @@ void init(SCENE_T *scene) {
     FILE *file = fopen("scene.txt", "r");
     OBJ_T *node = NULL;
     char info_type; // what the information is 
-    while (!feof(file)) { // iterate while file is not empty 
-        // allocate space for object
-        node = (OBJ_T*) malloc(sizeof(OBJ_T));
-        // read the type of object
-        fscanf(file, "%c", &info_type);
+    while (fscanf(file, "%c", &info_type) != EOF) { // iterate while file is not empty 
         if (info_type == 's') { // sphere type
+            // allocate space for object
+            node = (OBJ_T*) malloc(sizeof(OBJ_T));
             node->type = 's'; // set type to sphere
             // read sphere center
             fscanf(file, "%lf %lf %lf", &node->sphere.center.x, &node->sphere.center.y, &node->sphere.center.z);
@@ -68,6 +66,8 @@ void init(SCENE_T *scene) {
             node->next = scene->objs;
             scene->objs = node;
         } else if (info_type == 'p') { // plane type
+            // allocate space for object
+            node = (OBJ_T*) malloc(sizeof(OBJ_T));
             node->type = 'p'; // set type to plane
             // read plane normal
             fscanf(file, "%lf %lf %lf", &node->plane.normal.x, &node->plane.normal.y, &node->plane.normal.z);
