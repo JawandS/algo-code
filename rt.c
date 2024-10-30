@@ -103,21 +103,11 @@ int main() {
     SCENE_T scene;
     init(&scene);
     // manual initialization: 1920 x 1080
-    /* arbitrary aspect ratio
-    width / height : width dimention, hieght is 1 by reference 
-    still want to center the image at the origin 
-    starting_y 
-    ex: 1920 x 1080 - cols x rows, x is bigger 
-    pixel size is 1 / smaller dimension 
-    start_y = 0.5
-    start_x = -(number_cols/number_row) / 2
-    */
     int X_LEN = 640;
     int Y_LEN = 480;
     scene.start_x = - ((double) X_LEN / (double) Y_LEN) / 2.0;
     scene.start_y = 0.5;
     scene.pixel_size = 1.0 / (double) Y_LEN;
-    printf("start_x: %f, start_y: %f, pixel_size: %f\n", scene.start_x, scene.start_y, scene.pixel_size);
 
     // open the file 
     FILE *fimg = fopen("img.ppm", "w");
