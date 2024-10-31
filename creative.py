@@ -13,7 +13,7 @@ def create_light(f, center):
 # main method
 with open("c_scene.txt", "w") as f:
     # create bakcground plane
-    create_plane(f, "0 0 -1", 5, "0 0 0", "1 1 1")
+    create_plane(f, "0 0 -1", 3, "0 0 0", "1 1 1")
     
     # colors of the rainbow
     colors = ["1 0 0", "1 0.5 0", "1 1 0", "0 1 0", "0 0 1", "0.29 0 0.51", "0.56 0 1"]
@@ -28,7 +28,7 @@ with open("c_scene.txt", "w") as f:
         angle = 2 * math.pi * i / 7
         x = circle_radius * math.cos(angle)
         z = circle_radius * math.sin(angle)
-        center = f"{x} {z} 4.0"
+        center = f"{x} {z} 2.5"
         create_sphere(f, center, colors[i])
 
     # add light

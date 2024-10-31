@@ -20,7 +20,6 @@ static int shadow_test(VP_T intersection_point, OBJ_T *curr_obj, SCENE_T *scene)
         if (curr == curr_obj) 
             continue; // don't check the same object
         if (curr->intersects(shadow_ray, curr, &t, &tmp_int_pt, &normal)) {
-            // make sure the intersection point is not itself
             return 1; // in shadow
         }
     }

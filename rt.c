@@ -102,7 +102,7 @@ int main() {
     // initialize scene
     SCENE_T scene;
     init(&scene);
-    // manual initialization: 1920 x 1080
+    // manual initialization: 640 x 480
     int X_LEN = 640;
     int Y_LEN = 480;
     scene.start_x = - ((double) X_LEN / (double) Y_LEN) / 2.0;
@@ -123,8 +123,8 @@ int main() {
             RAY_T curr_ray = {
                 .origin = eye_pos,
                 .dir = {
-                    .x = (scene.start_x + (x / (double) Y_LEN)),
-                    .y = -(-scene.start_y + (y / (double) Y_LEN)),
+                    .x = (scene.start_x + (x * scene.pixel_size)),
+                    .y = -(-scene.start_y + (y * scene.pixel_size)),
                     .z = 1
                 }
             };
