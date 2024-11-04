@@ -103,8 +103,8 @@ int main() {
     SCENE_T scene;
     init(&scene);
     // manual initialization: 640 x 480
-    int X_LEN = 640;
-    int Y_LEN = 480;
+    const int X_LEN = 640;
+    const int Y_LEN = 480;
     scene.start_x = - ((double) X_LEN / (double) Y_LEN) / 2.0;
     scene.start_y = 0.5;
     scene.pixel_size = 1.0 / (double) Y_LEN;

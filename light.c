@@ -30,7 +30,7 @@ static int shadow_test(VP_T intersection_point, OBJ_T *curr_obj, SCENE_T *scene)
 RGB_T illuminate(OBJ_T *obj, VP_T intersection_point, VP_T normal, SCENE_T *scene, RAY_T ray) {
     // decide which object color to use 
     RGB_T obj_color = obj->color;
-    if (obj->checker && !(((int) floor(intersection_point.x) + 
+    if (obj->checker && (((int) floor(intersection_point.x) + 
                          (int) floor(intersection_point.y) + 
                          (int) floor(intersection_point.z)) & 1)) {
         obj_color = obj->color2;
