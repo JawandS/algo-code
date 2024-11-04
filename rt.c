@@ -141,13 +141,3 @@ int main() {
     // exit
     return 0;
 }
-
-/*
-Tasks:
-1. Create a linked list of objects
-2. Include scene structure (in main). Pass to init 
-3. Updating to file writing 
-4. update trace to use linked list
-5. include vp subtract 
-6. finish light.c 
-*/
