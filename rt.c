@@ -58,7 +58,7 @@ void init(SCENE_T *scene) {
             // set checker to false
             node->checker = 0;
             // set interects function
-            node->intersects = &intersects_sphere;
+            node->intersects = intersects_sphere;
             // add it to the objects linked list
             node->next = scene->objs;
             scene->objs = node;
@@ -77,7 +77,7 @@ void init(SCENE_T *scene) {
             // read plane color2
             fscanf(file, "%lf %lf %lf", &node->color2.r, &node->color2.g, &node->color2.b);
             // set interects function
-            node->intersects = &intersects_plane;
+            node->intersects = intersects_plane;
             // add it to the objects linked list
             node->next = scene->objs;
             scene->objs = node;
