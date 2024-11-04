@@ -41,7 +41,7 @@ void init(SCENE_T *scene) {
     // default values for scene 
     scene->objs = NULL;
     // read file for object information
-    FILE *file = fopen("scene.txt", "r");
+    FILE *file = fopen("scene1.txt", "r");
     OBJ_T *node = NULL;
     char info_type; // what the information is 
     while (fscanf(file, "%c", &info_type) != EOF) { // iterate while file is not empty 
