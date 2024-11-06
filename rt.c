@@ -17,7 +17,10 @@ RGB_T trace(RAY_T ray, SCENE_T *scene) {
     VP_T normal;
     OBJ_T *closest_obj = NULL;
     // baseline color
-    RGB_T obj_color = (RGB_T) {0.3, 0.3, 0.5};
+    RGB_T obj_color;
+    obj_color.r = 0.3;
+    obj_color.g = 0.3;
+    obj_color.b = 0.5;
     // iterate through objects in scene
     OBJ_T *curr;
     for(curr = scene->objs; curr != NULL; curr = curr->next) {
@@ -93,11 +96,10 @@ void init(SCENE_T *scene) {
 // main method
 int main() {
     // set eye position 
-    VP_T eye_pos = {
-        .x = 0.0,
-        .y = 0.0,
-        .z = 0.0
-    };
+    VP_T eye_pos;
+    eye_pos.x = 0.0;
+    eye_pos.y = 0.0;
+    eye_pos.z = 0.0;
 
     // initialize scene
     SCENE_T scene;
@@ -120,14 +122,11 @@ int main() {
     for (int y = 0; y < Y_LEN; y++) {
         for (int x = 0; x < X_LEN; x++) {
             // set ray origin and direction
-            RAY_T curr_ray = {
-                .origin = eye_pos,
-                .dir = {
-                    .x = (scene.start_x + (x * scene.pixel_size)),
-                    .y = -(-scene.start_y + (y * scene.pixel_size)),
-                    .z = 1
-                }
-            };
+            RAY_T curr_ray;
+            curr_ray.origin = eye_pos;
+            curr_ray.dir.x = (scene.start_x + (x * scene.pixel_size));
+            curr_ray.dir.y = -(-scene.start_y + (y * scene.pixel_size));
+            curr_ray.dir.z = 1;
             normalize(&curr_ray.dir);
             // write pixel 
             RGB_T point_color = trace(curr_ray, &scene); // replace with scene
